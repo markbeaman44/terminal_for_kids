@@ -1,0 +1,13 @@
+{
+  "name": "terminal_for_kids",
+  "version": "1.0.0",
+  "main": "index.html",
+  "license": "MIT",
+  "scripts": {
+    "start": "vite"
+  },
+  "dependencies": {
+    "phaser": "^3.85.2",
+    "vite": "^5.4.8"
+  }
+}
