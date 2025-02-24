@@ -5,7 +5,7 @@ export default class mainMenu extends Phaser.Scene {
         super({ key: 'mainMenu' });
     }
     public backgroundColour: string = "#224";
-    public levelGroup: Phaser.GameObjects.Container;
+    public levelGroup!: Phaser.GameObjects.Container;
 
     preload() {
         document.body.style.margin = "0";
