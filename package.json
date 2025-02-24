@@ -4,12 +4,9 @@
   "main": "index.html",
   "license": "MIT",
   "scripts": {
-    "start": "npx tsc && vite",
-    "build": "npx tsc",
-    "deploy": "yarn build && gh-pages -d dist"
+    "start": "npx tsc && vite"
   },
   "dependencies": {
-    "gh-pages": "^6.3.0",
     "phaser": "^3.85.2",
     "vite": "^5.4.8"
   }
