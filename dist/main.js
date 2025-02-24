@@ -1,6 +1,5 @@
-import Phaser from "phaser";
-import mainMenu from './scenes/mainMenu';
-import levels from './scenes/levels';
+import mainMenu from "./scenes/mainMenu.js";
+import levels from "./scenes/levels.js";
 const backgroundColour = "#224";
 const config = {
     type: Phaser.AUTO,

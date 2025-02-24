@@ -1,4 +1,6 @@
-import Phaser from "phaser";
+// @ts-ignore
+import Phaser from "https://cdn.jsdelivr.net/npm/phaser@3.85.2/dist/phaser.esm.js";
+declare const Phaser: typeof import("phaser");
 
 import mainMenu from './scenes/mainMenu';
 import levels from './scenes/levels';

@@ -1,4 +1,4 @@
-import * as constant from './constant';
+import * as constant from "./constant.js";
 export default class mainMenu extends Phaser.Scene {
     constructor() {
         super({ key: 'mainMenu' });
