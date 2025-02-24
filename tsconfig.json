@@ -1,7 +1,17 @@
 {
   "compilerOptions": {
-    "lib": ["es6", "dom", "dom.iterable", "scripthost"],
-    "typeRoots": ["./node_modules/phaser/types"],
-    "types": ["Phaser"]
-  }
+    "module": "ESNext",
+    "target": "ES6",
+    "moduleResolution": "Node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "exclude": ["node_modules", "dist"]
 }
