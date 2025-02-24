@@ -4,7 +4,8 @@
   "main": "index.html",
   "license": "MIT",
   "scripts": {
-    "start": "npx tsc && vite"
+    "build": "npx tsc && node fix-imports.mjs",
+    "start": "yarn build && vite"
   },
   "dependencies": {
     "phaser": "^3.85.2",
