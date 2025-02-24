@@ -11,7 +11,7 @@
     "strict": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types", "./node_modules/phaser/types"]
   },
   "exclude": ["node_modules", "dist"]
 }

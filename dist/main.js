@@ -1,4 +1,3 @@
-import Phaser from "phaser";
 import mainMenu from './scenes/mainMenu';
 import levels from './scenes/levels';
 const backgroundColour = "#224";
