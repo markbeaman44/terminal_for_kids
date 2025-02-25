@@ -115,6 +115,12 @@ export default class level extends Phaser.Scene {
                 const randomColor = Phaser.Display.Color.RandomRGB().color;
                 this.robot.setTint(randomColor);
             }
+            if (
+                this.inputText.text.trim().toLowerCase() === 'continue' && 
+                this.currentCommandIndex === this.commands.length
+            ) {
+                this.loadNextLevel()
+            } 
             if (event.key === "Enter") {
                 this.checkCommand();
             } else if (event.key === "Backspace") {
@@ -194,7 +200,7 @@ export default class level extends Phaser.Scene {
             yoyo: true,
             ease: 'Power1' // Smooth easing
         });
-        this.time.delayedCall(1000, () => {
+        this.time.delayedCall(1001, () => {
             this.tweens.add({
                 targets: this.robot,
                 x: this.robot.x - 300,
