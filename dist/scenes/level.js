@@ -1,5 +1,5 @@
 import * as constant from "./constant.js";
-import speechHandler from "./speechHandler.js";
+import speechHandler from "./speechHandling.js";
 import robotAnimations from "./robotAnimations.js";
 import levelUI from "./levelUI.js";
 export default class level extends Phaser.Scene {
