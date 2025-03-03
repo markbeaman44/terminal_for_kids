@@ -1,4 +1,5 @@
 import * as constant from "./constant.js";
+import levelUI from "./levelUI.js";
 export default class mainMenu extends Phaser.Scene {
     constructor() {
         super({ key: 'mainMenu' });
@@ -11,20 +12,19 @@ export default class mainMenu extends Phaser.Scene {
     }
     create() {
         var _a, _b;
-        let fontSize = this.scale.width < 800 ? '16px' : '24px';
+        // Set font size
+        this.fontSize = this.scale.width < 800 ? '16px' : '24px';
+        // Initialize classes
+        this.levelUI = new levelUI(this, this.fontSize);
         // Set background
         this.cameras.main.setBackgroundColor(this.backgroundColour);
-        this.arrowText = this.add.text(-190, 200, ">", { fontSize: fontSize, color: "#0f0" });
-        this.inputText = this.add.text(-170, 200, "", { fontSize: fontSize, color: "#0f0" });
+        this.arrowText = this.add.text(-190, 200, ">", { fontSize: this.fontSize, color: "#0f0" });
+        this.inputText = this.add.text(-170, 200, "", { fontSize: this.fontSize, color: "#0f0" });
         let title = this.add.text(-100, -300, 'Select Level', { fontSize: '32px', color: '#ffffff' });
         this.input.setDefaultCursor('default');
         const levelButtons = [];
         for (let i = 1; i <= constant.commands.length; i++) {
-            let levelText = this.add.text(-40, -250 + i * 50, `> Level ${i}`, { fontSize: fontSize, color: "#0f0" })
-                .setInteractive()
-                .on("pointerover", () => this.input.setDefaultCursor("pointer"))
-                .on("pointerout", () => this.input.setDefaultCursor("default"))
-                .on('pointerdown', () => { this.scene.start(`level${i}`); });
+            let levelText = this.levelUI.addInteractiveText(-40, -250 + i * 50, `> Level ${i}`, () => { this.scene.start(`level${i}`); });
             levelButtons.push(levelText);
         }
         // Create a container for all elements

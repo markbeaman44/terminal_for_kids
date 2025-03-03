@@ -1,13 +1,16 @@
 import * as constant from './constant';
+import levelUI from './levelUI';
 
 export default class mainMenu extends Phaser.Scene {
     constructor() {
         super({ key: 'mainMenu' });
     }
-    public backgroundColour: string = "#224";
-    public levelGroup!: Phaser.GameObjects.Container;
-    public inputText!: Phaser.GameObjects.Text;
-    public arrowText!: Phaser.GameObjects.Text;
+    private backgroundColour: string = "#224";
+    private levelUI!: levelUI;
+    private levelGroup!: Phaser.GameObjects.Container;
+    private inputText!: Phaser.GameObjects.Text;
+    private arrowText!: Phaser.GameObjects.Text;
+    private fontSize!: string;
 
     preload() {
         document.body.style.margin = "0";
@@ -16,13 +19,17 @@ export default class mainMenu extends Phaser.Scene {
     }
 
     create() {
-        let fontSize = this.scale.width < 800 ? '16px' : '24px';
+         // Set font size
+        this.fontSize = this.scale.width < 800 ? '16px' : '24px';
+
+        // Initialize classes
+        this.levelUI = new levelUI(this, this.fontSize)
 
         // Set background
         this.cameras.main.setBackgroundColor(this.backgroundColour);
 
-        this.arrowText = this.add.text(-190, 200, ">", { fontSize: fontSize, color: "#0f0" });
-        this.inputText = this.add.text(-170, 200, "", { fontSize: fontSize, color: "#0f0" });
+        this.arrowText = this.add.text(-190, 200, ">", { fontSize: this.fontSize, color: "#0f0" });
+        this.inputText = this.add.text(-170, 200, "", { fontSize: this.fontSize, color: "#0f0" });
         
         let title = this.add.text(-100, -300, 'Select Level', { fontSize: '32px', color: '#ffffff' });
         this.input.setDefaultCursor('default');
@@ -30,13 +37,10 @@ export default class mainMenu extends Phaser.Scene {
         const levelButtons: any[] = []
     
         for (let i = 1; i <= constant.commands.length; i++) {
-            let levelText = this.add.text(-40, -250 + i * 50, `> Level ${i}`, { fontSize: fontSize, color: "#0f0" })
-                .setInteractive()
-                .on("pointerover", () => this.input.setDefaultCursor("pointer"))
-                .on("pointerout", () => this.input.setDefaultCursor("default"))
-                .on('pointerdown', () => { this.scene.start(`level${i}`)});
-
-                levelButtons.push(levelText)
+            let levelText = this.levelUI.addInteractiveText(
+                -40, -250 + i * 50, `> Level ${i}`, () => { this.scene.start(`level${i}`)}
+            )
+            levelButtons.push(levelText)
         }
 
         // Create a container for all elements
