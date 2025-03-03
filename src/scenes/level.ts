@@ -1,5 +1,5 @@
 import * as constant from './constant';
-import speechHandler from "./speechHandler";
+import speechHandler from "./speechHandling";
 import robotAnimations from "./robotAnimations";
 import levelUI from './levelUI';
 

@@ -12,8 +12,9 @@
     "strict": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src/**/*", "src/types/responsivevoice.d.ts"],
+  "include": ["src/**/*", "src/types/responsivevoice.d.ts", "./src/types"],
   "exclude": ["node_modules", "dist"]
 }
