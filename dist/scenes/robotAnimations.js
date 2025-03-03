@@ -43,6 +43,7 @@ export default class robotAnimation {
             targets: robot,
             x: Phaser.Math.Between(xDirection, this.scene.scale.width - 100),
             y: Phaser.Math.Between(yDirection, this.scene.scale.height - 250),
+            angle: 180,
             duration: Phaser.Math.Between(500, 1500),
             yoyo: true,
             ease: 'Quad.In' // Smooth easing
