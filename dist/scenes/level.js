@@ -1,10 +1,13 @@
 import * as constant from "./constant.js";
+import speechHandler from "./speechHandler.js";
+import robotAnimations from "./robotAnimations.js";
+import levelUI from "./levelUI.js";
 export default class level extends Phaser.Scene {
     constructor(levelNumber, commands) {
         super({ key: `level${levelNumber}` });
         this.backgroundColour = "#224";
-        this.currentCommand = "";
         this.currentCommandIndex = 0;
+        this.currentCommand = "";
         this.levelNumber = levelNumber;
         this.commands = commands;
         this.progress = Array(this.commands.length).fill(0);
@@ -22,30 +25,30 @@ export default class level extends Phaser.Scene {
     }
     create() {
         var _a, _b;
-        let fontSize = this.scale.width < 800 ? '16px' : '24px';
+        // Set font size
+        this.fontSize = this.scale.width < 800 ? '16px' : '24px';
+        // Initialize classes
+        this.speechHandler = new speechHandler(this);
+        this.robotAnimations = new robotAnimations(this);
+        this.levelUI = new levelUI(this, this.fontSize);
         // Set background
         this.cameras.main.setBackgroundColor(this.backgroundColour);
+        // sound on/off
+        this.speechButton = this.speechHandler.createSpeechButton(200, -230);
+        // sound on/off
+        this.languageButton = this.speechHandler.createLanguageButton(200, -260);
         // title level
         this.levelTitle = this.add.text(-60, -300, `Level ${this.levelNumber}`, { fontSize: '32px', color: '#ffffff' });
         this.input.setDefaultCursor('default');
         // back to menu
-        this.backMenu = this.add.text(-280, -260, `> Menu`, { fontSize: fontSize, color: "#0f0" })
-            .setInteractive()
-            .on('pointerover', () => { this.input.setDefaultCursor('pointer'); })
-            .on('pointerout', () => { this.input.setDefaultCursor('default'); })
-            .on('pointerdown', () => { this.scene.start('mainMenu'); });
+        this.backMenu = this.levelUI.addInteractiveText(-280, -260, `> Menu`, () => {
+            this.scene.start('mainMenu');
+            responsiveVoice.cancel();
+        });
         // restart
-        this.restartButton = this.add.text(-280, -230, `> Restart`, { fontSize: fontSize, color: "#0f0" })
-            .setInteractive()
-            .on('pointerover', () => { this.input.setDefaultCursor('pointer'); })
-            .on('pointerout', () => { this.input.setDefaultCursor('default'); })
-            .on('pointerdown', () => { this.scene.restart(); });
+        this.restartButton = this.levelUI.addInteractiveText(-280, -230, `> Restart`, () => { this.scene.restart(); });
         // change colour
-        this.changeColour = this.add.text(-280, -200, `> Change \n  Colour`, { fontSize: fontSize, color: "#0f0" })
-            .setInteractive()
-            .on('pointerover', () => { this.input.setDefaultCursor('pointer'); })
-            .on('pointerout', () => { this.input.setDefaultCursor('default'); })
-            .on('pointerdown', () => {
+        this.changeColour = this.levelUI.addInteractiveText(-280, -200, `> Change \n  Colour`, () => {
             const randomColor = Phaser.Display.Color.RandomRGB().color;
             this.robot.setTint(randomColor);
         });
@@ -57,9 +60,10 @@ export default class level extends Phaser.Scene {
             color: "#fff",
             wordWrap: { width: 480 }
         });
+        this.speechHandler.playWordPrompt(this.commands[this.currentCommandIndex]['message'].split('Robo:')[1]);
         // Add arrow and input text
-        this.arrowText = this.add.text(-190, 200, ">", { fontSize: fontSize, color: "#0f0" });
-        this.inputText = this.add.text(-170, 200, "", { fontSize: fontSize, color: "#0f0" });
+        this.arrowText = this.add.text(-190, 200, ">", { fontSize: this.fontSize, color: "#0f0" });
+        this.inputText = this.add.text(-170, 200, "", { fontSize: this.fontSize, color: "#0f0" });
         // Feedback text and progress
         this.feedbackText = this.add.text(-180, 300, "", { fontSize: "20px", color: "#ff0" });
         this.progressText = this.add.text(0, 80, `Score: ${this.progress.join(" ")}`, {
@@ -69,19 +73,23 @@ export default class level extends Phaser.Scene {
         // Create a container for all elements
         this.imageGroup = this.add.container(this.scale.width / 2, this.scale.height / 2, [
             this.robot, this.instructionText, this.arrowText, this.inputText,
-            this.feedbackText, this.progressText, this.restartButton, this.backMenu,
-            this.levelTitle, this.changeColour
+            this.feedbackText, this.progressText, this.restartButton,
+            this.levelTitle, this.changeColour, this.backMenu, this.speechButton, this.languageButton
         ]);
         // Handle keyboard input
         (_b = (_a = this.input) === null || _a === void 0 ? void 0 : _a.keyboard) === null || _b === void 0 ? void 0 : _b.on('keydown', (event) => {
+            if (this.inputText.text.trim().toLowerCase() === 'repeat') {
+                this.speechHandler.toggleSpeech();
+            }
             if (this.inputText.text.trim().toLowerCase() === 'elie') {
-                this.flyAround();
+                this.robotAnimations.flyAround(this.robot);
             }
             if (this.inputText.text.trim().toLowerCase() === 'restart') {
                 this.scene.restart();
             }
             if (this.inputText.text.trim().toLowerCase() === 'menu') {
                 this.scene.start('mainMenu');
+                responsiveVoice.cancel();
             }
             if (this.inputText.text.trim().toLowerCase() === 'change colour') {
                 const randomColor = Phaser.Display.Color.RandomRGB().color;
@@ -104,21 +112,22 @@ export default class level extends Phaser.Scene {
         this.scale.on("resize", this.resizeGame, this);
     }
     checkCommand() {
+        const commandList = ['change colour', 'repeat', 'elie'];
         let typedCommand = this.inputText.text.trim().toLowerCase();
-        if (typedCommand === 'change colour') {
+        if (commandList.includes(typedCommand)) {
             this.inputText.setText("");
             return;
         }
         ;
         if (typedCommand === this.commands[this.currentCommandIndex]['value']) {
-            this.moveRobotSuccess();
+            this.robotAnimations.moveRobotSuccess(this.robot);
             this.feedbackText.setText("Robo: 'Yay! You did it! ⭐'");
             this.progress[this.currentCommandIndex] = 1;
             this.progressText.setText(`Score: ${this.progress.join(" ")}`);
             this.nextCommand();
         }
         else {
-            this.fallRobotFail();
+            this.robotAnimations.fallRobotFail(this.robot);
             this.feedbackText.setText("Robo: 'Hmm... Try again!'");
         }
         this.inputText.setText("");
@@ -129,15 +138,27 @@ export default class level extends Phaser.Scene {
         this.currentCommandIndex++;
         if (this.currentCommandIndex < this.commands.length) {
             this.instructionText.setText(this.commands[this.currentCommandIndex]['message']);
+            this.speechHandler.playWordPrompt(this.commands[this.currentCommandIndex]['message'].split('Robo:')[1]);
         }
         else {
             this.feedbackText.setText("");
+            this.speechHandler.playWordPrompt("You fixed everything! You're a real hacker");
             this.instructionText.setText("Robo: 'You fixed everything! You're a real hacker! 🎉' \n\n        Click to Continue")
                 .setInteractive()
                 .on('pointerover', () => { this.input.setDefaultCursor('pointer'); })
                 .on('pointerout', () => { this.input.setDefaultCursor('default'); })
                 .on('pointerdown', () => { this.loadNextLevel(); });
             ;
+        }
+    }
+    loadNextLevel() {
+        let nextLevel = this.levelNumber + 1;
+        if (nextLevel <= constant.commands.length) {
+            this.scene.start(`level${nextLevel}`);
+        }
+        else {
+            this.scene.start('mainMenu');
+            responsiveVoice.cancel();
         }
     }
     resizeGame(gameSize) {
@@ -148,60 +169,5 @@ export default class level extends Phaser.Scene {
         this.cameras.resize(width, height);
         // Reposition Images within Group
         this.imageGroup.setPosition(width / 2, height / 2);
-    }
-    loadNextLevel() {
-        let nextLevel = this.levelNumber + 1;
-        if (nextLevel <= constant.commands.length) {
-            this.scene.start(`level${nextLevel}`);
-        }
-        else {
-            this.scene.start('mainMenu');
-        }
-    }
-    moveRobotSuccess() {
-        this.tweens.add({
-            targets: this.robot,
-            x: this.robot.x + 300,
-            duration: 500,
-            yoyo: true,
-            ease: 'Power1' // Smooth easing
-        });
-        this.time.delayedCall(1001, () => {
-            this.tweens.add({
-                targets: this.robot,
-                x: this.robot.x - 300,
-                duration: 500,
-                yoyo: true,
-                ease: 'Power1'
-            });
-        });
-    }
-    fallRobotFail() {
-        this.tweens.add({
-            targets: this.robot,
-            angle: 90,
-            duration: 500,
-            ease: 'Bounce.easeOut' // Add bounce effect
-        });
-        this.time.delayedCall(1500, () => {
-            this.tweens.add({
-                targets: this.robot,
-                angle: 0,
-                duration: 500,
-                ease: 'Power1'
-            });
-        });
-    }
-    flyAround() {
-        const xDirection = Phaser.Math.Between(0, 1) === 0 ? -100 : 100;
-        const yDirection = Phaser.Math.Between(0, 1) === 0 ? -200 : 200;
-        this.tweens.add({
-            targets: this.robot,
-            x: Phaser.Math.Between(xDirection, this.scale.width - 100),
-            y: Phaser.Math.Between(yDirection, this.scale.height - 250),
-            duration: Phaser.Math.Between(500, 1500),
-            yoyo: true,
-            ease: 'Quad.In' // Smooth easing
-        });
     }
 }
