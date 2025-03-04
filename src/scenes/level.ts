@@ -231,11 +231,7 @@ export default class level extends Phaser.Scene {
     // Function to detect if the user is on a mobile/tablet
     isMobileDevice() {
         let userAgent = navigator.userAgent.toLowerCase();
-        let isMobile = /mobi|android|iphone|ipad|ipod/.test(userAgent);
-        let isTablet = /tablet|ipad|playbook|silk/.test(userAgent); 
-        let isSamsungTablet = /samsung/.test(userAgent) && !/mobile/.test(userAgent); 
-        
-        return isMobile || isTablet || isSamsungTablet;
+        return /mobi|android|iPhone|iPad|iPod/i.test(userAgent);
     }
 
     // Function to handle mobile input
