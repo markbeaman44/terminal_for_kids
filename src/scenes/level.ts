@@ -158,7 +158,7 @@ export default class level extends Phaser.Scene {
         this.scale.on("resize", this.resizeGame, this);
 
         if (this.isMobileDevice()) {
-            this.scale.stopFullscreen();
+            // this.scale.stopFullscreen();
             this.setupMobileKeyboard();
         }
     
@@ -237,29 +237,27 @@ export default class level extends Phaser.Scene {
     // Function to handle mobile input
     setupMobileKeyboard() {
         this.htmlInput = document.createElement("input");
-        this.htmlInput.type = "text";
         this.htmlInput.style.position = "absolute";
         this.htmlInput.style.opacity = "0"; // Hide input field
-        this.htmlInput.style.pointerEvents = "none";
         document.body.appendChild(this.htmlInput);
 
         // Show keyboard when tapping the screen
-        this.input.on("pointerdown", () => {
+        this.inputText.on("pointerdown", () => {
             this.htmlInput.focus();
         });
 
-        // Sync input to Phaser text
-        this.htmlInput.addEventListener("input", (event) => {
-            this.inputText.setText((event.target as HTMLInputElement).value);
-        });
+        // // Sync input to Phaser text
+        // this.htmlInput.addEventListener("input", (event) => {
+        //     this.inputText.setText((event.target as HTMLInputElement).value);
+        // });
 
-        // Handle Enter key
-        this.htmlInput.addEventListener("keydown", (event) => {
-            if (event.key === "Enter") {
-                this.checkCommand();
-                this.htmlInput.value = "";
-            }
-        });
+        // // Handle Enter key
+        // this.htmlInput.addEventListener("keydown", (event) => {
+        //     if (event.key === "Enter") {
+        //         this.checkCommand();
+        //         this.htmlInput.value = "";
+        //     }
+        // });
     }
 
 
