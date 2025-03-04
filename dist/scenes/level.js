@@ -114,10 +114,11 @@ export default class level extends Phaser.Scene {
             }
         });
         this.scale.on("resize", this.resizeGame, this);
-        if (this.isMobileDevice()) {
-            // this.scale.stopFullscreen();
-            this.setupMobileKeyboard();
-        }
+        // if (this.isMobileDevice()) {
+        //     // this.scale.stopFullscreen();
+        //     this.setupMobileKeyboard();
+        // }
+        this.setupMobileKeyboard();
     }
     checkCommand() {
         const commandList = ['change colour', 'repeat', 'elie'];
@@ -189,6 +190,8 @@ export default class level extends Phaser.Scene {
         this.htmlInput.style.position = "absolute";
         this.htmlInput.style.opacity = "0"; // Hide input field
         document.body.appendChild(this.htmlInput);
+        console.log('IM CALLED');
+        this.htmlInput.focus();
         // Show keyboard when tapping the screen
         this.inputText.on("pointerdown", () => {
             this.htmlInput.focus();
