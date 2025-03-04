@@ -36,17 +36,25 @@ export default class robotAnimation {
             });
         });
     }
-    flyAround(robot) {
-        const xDirection = Phaser.Math.Between(0, 1) === 0 ? -100 : 100;
-        const yDirection = Phaser.Math.Between(0, 1) === 0 ? -200 : 200;
+    flyAround(robot, robotFly) {
+        robot.setVisible(false);
+        robotFly.setVisible(true);
+        const xDirection = Phaser.Math.Between(0, 1) === 0 ? -500 : 500;
+        const yDirection = Phaser.Math.Between(0, 1) === 0 ? -400 : 400;
+        const eases = ['Sine.InOut', 'Linear', 'Cubic.Out'];
+        const randomEase = Phaser.Utils.Array.GetRandom(eases);
         this.scene.tweens.add({
-            targets: robot,
-            x: Phaser.Math.Between(xDirection, this.scene.scale.width - 100),
-            y: Phaser.Math.Between(yDirection, this.scene.scale.height - 250),
+            targets: robotFly,
+            x: xDirection,
+            y: yDirection,
             angle: 180,
             duration: Phaser.Math.Between(500, 1500),
             yoyo: true,
-            ease: 'Quad.In' // Smooth easing
+            ease: randomEase,
+            onComplete: () => {
+                robot.setVisible(true);
+                robotFly.setVisible(false);
+            }
         });
     }
 }

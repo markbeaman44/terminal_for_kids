@@ -19,6 +19,7 @@ export default class level extends Phaser.Scene {
     }
     preload() {
         this.load.image('robot', 'assets/robot.png');
+        this.load.image('robotFly', 'assets/robotFlying.png');
         document.body.style.margin = "0";
         document.body.style.padding = "0";
         document.body.style.overflow = "hidden";
@@ -54,6 +55,8 @@ export default class level extends Phaser.Scene {
         });
         // Add robot image
         this.robot = this.add.image(0, -50, 'robot').setScale(0.3);
+        this.robotFly = this.add.image(0, -50, 'robotFly').setScale(0.3).setVisible(false);
+        ;
         // Show instructions for the current level
         this.instructionText = this.add.text(-190, 120, this.commands[this.currentCommandIndex]['message'], {
             fontSize: "20px",
@@ -74,7 +77,8 @@ export default class level extends Phaser.Scene {
         this.imageGroup = this.add.container(this.scale.width / 2, this.scale.height / 2, [
             this.robot, this.instructionText, this.arrowText, this.inputText,
             this.feedbackText, this.progressText, this.restartButton,
-            this.levelTitle, this.changeColour, this.backMenu, this.speechButton, this.languageButton
+            this.levelTitle, this.changeColour, this.backMenu, this.speechButton,
+            this.languageButton, this.robotFly
         ]);
         // Handle keyboard input
         (_b = (_a = this.input) === null || _a === void 0 ? void 0 : _a.keyboard) === null || _b === void 0 ? void 0 : _b.on('keydown', (event) => {
@@ -82,7 +86,7 @@ export default class level extends Phaser.Scene {
                 this.speechHandler.toggleSpeech();
             }
             if (this.inputText.text.trim().toLowerCase() === 'elie') {
-                this.robotAnimations.flyAround(this.robot);
+                this.robotAnimations.flyAround(this.robot, this.robotFly);
             }
             if (this.inputText.text.trim().toLowerCase() === 'restart') {
                 this.scene.restart();

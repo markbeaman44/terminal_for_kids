@@ -27,6 +27,7 @@ export default class level extends Phaser.Scene {
     private instructionText!: Phaser.GameObjects.Text;
     private feedbackText!: Phaser.GameObjects.Text;
     private robot!: Phaser.GameObjects.Image;
+    private robotFly!: Phaser.GameObjects.Image;
     private progressText!: Phaser.GameObjects.Text;
     private imageGroup!: Phaser.GameObjects.Container;
     private currentCommandIndex = 0;
@@ -43,6 +44,7 @@ export default class level extends Phaser.Scene {
     
     preload() {
         this.load.image('robot', 'assets/robot.png');
+        this.load.image('robotFly', 'assets/robotFlying.png');
 
         document.body.style.margin = "0";
         document.body.style.padding = "0";
@@ -88,6 +90,7 @@ export default class level extends Phaser.Scene {
  
         // Add robot image
         this.robot = this.add.image(0, -50, 'robot').setScale(0.3);
+        this.robotFly = this.add.image(0, -50, 'robotFly').setScale(0.3).setVisible(false);;
 
         // Show instructions for the current level
         this.instructionText = this.add.text(-190, 120, this.commands[this.currentCommandIndex]['message'], {
@@ -112,7 +115,8 @@ export default class level extends Phaser.Scene {
         this.imageGroup = this.add.container(this.scale.width / 2, this.scale.height / 2, [
             this.robot, this.instructionText, this.arrowText, this.inputText,
             this.feedbackText, this.progressText, this.restartButton,
-            this.levelTitle, this.changeColour, this.backMenu, this.speechButton, this.languageButton
+            this.levelTitle, this.changeColour, this.backMenu, this.speechButton,
+            this.languageButton, this.robotFly
         ]);
 
         // Handle keyboard input
@@ -121,7 +125,7 @@ export default class level extends Phaser.Scene {
                 this.speechHandler.toggleSpeech();
             }
             if (this.inputText.text.trim().toLowerCase() === 'elie') {
-                this.robotAnimations.flyAround(this.robot);
+                this.robotAnimations.flyAround(this.robot, this.robotFly);
             }
             if (this.inputText.text.trim().toLowerCase() === 'restart') {
                 this.scene.restart();
@@ -214,5 +218,5 @@ export default class level extends Phaser.Scene {
         this.cameras.resize(width, height);
         // Reposition Images within Group
         this.imageGroup.setPosition(width / 2, height / 2);
-      }  
+    }
 }
