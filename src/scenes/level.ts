@@ -161,6 +161,7 @@ export default class level extends Phaser.Scene {
             this.scale.stopFullscreen();
             this.setupMobileKeyboard();
         }
+    
 
     }
 
@@ -229,7 +230,12 @@ export default class level extends Phaser.Scene {
 
     // Function to detect if the user is on a mobile/tablet
     isMobileDevice() {
-        return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        let userAgent = navigator.userAgent.toLowerCase();
+        let isMobile = /mobi|android|iphone|ipad|ipod/.test(userAgent);
+        let isTablet = /tablet|ipad|playbook|silk/.test(userAgent); 
+        let isSamsungTablet = /samsung/.test(userAgent) && !/mobile/.test(userAgent); 
+        
+        return isMobile || isTablet || isSamsungTablet;
     }
 
     // Function to handle mobile input
