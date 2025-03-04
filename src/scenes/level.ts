@@ -36,8 +36,6 @@ export default class level extends Phaser.Scene {
     private languageButton!: Phaser.GameObjects.Text;
     private speechButton!: Phaser.GameObjects.Text;
 
-    private htmlInput!: any;
-
     init() {
         this.currentCommandIndex = 0;
         this.currentCommand = "";
@@ -157,13 +155,6 @@ export default class level extends Phaser.Scene {
 
         this.scale.on("resize", this.resizeGame, this);
 
-        // if (this.isMobileDevice()) {
-        //     // this.scale.stopFullscreen();
-        //     this.setupMobileKeyboard();
-        // }
-        this.setupMobileKeyboard();
-    
-
     }
 
     checkCommand() {
@@ -228,42 +219,4 @@ export default class level extends Phaser.Scene {
         // Reposition Images within Group
         this.imageGroup.setPosition(width / 2, height / 2);
     }
-
-    // Function to detect if the user is on a mobile/tablet
-    isMobileDevice() {
-        let userAgent = navigator.userAgent.toLowerCase();
-        return /mobi|android|iPhone|iPad|iPod/i.test(userAgent);
-    }
-
-    // Function to handle mobile input
-    setupMobileKeyboard() {
-        this.htmlInput = document.createElement("input");
-        this.htmlInput.style.position = "absolute";
-        this.htmlInput.style.opacity = "0"; // Hide input field
-        document.body.appendChild(this.htmlInput);
-
-        console.log('IM CALLED')
-
-        this.htmlInput.focus();
-
-        // Show keyboard when tapping the screen
-        this.inputText.on("pointerdown", () => {
-            this.htmlInput.focus();
-        });
-
-        // // Sync input to Phaser text
-        // this.htmlInput.addEventListener("input", (event) => {
-        //     this.inputText.setText((event.target as HTMLInputElement).value);
-        // });
-
-        // // Handle Enter key
-        // this.htmlInput.addEventListener("keydown", (event) => {
-        //     if (event.key === "Enter") {
-        //         this.checkCommand();
-        //         this.htmlInput.value = "";
-        //     }
-        // });
-    }
-
-
 }
