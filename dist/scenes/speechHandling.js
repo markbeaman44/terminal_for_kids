@@ -10,14 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 export default class speechHandler {
     constructor(scene) {
-        this.speechEnabled = true;
+        this.speechEnabled = false;
         this.isTagalog = false;
         this.lastSpokenText = "";
         this.voiceName = "Filipino Female";
         this.scene = scene;
     }
     createSpeechButton(x, y) {
-        return this.speechButton = this.scene.add.text(x, y, "🔊 Sound: ON", {
+        return this.speechButton = this.scene.add.text(x, y, "🔇 Sound: OFF", {
             fontSize: "24px",
             color: "#ffffff",
             backgroundColor: "#333",
@@ -50,10 +50,11 @@ export default class speechHandler {
     }
     playWordPrompt(word) {
         return __awaiter(this, void 0, void 0, function* () {
+            this.lastSpokenText = word;
             // Use chosen voice if delay use default voice
             if (this.speechEnabled) {
                 const availableVoices = responsiveVoice.getVoices().map(v => v.name);
-                this.lastSpokenText = word;
+                // this.lastSpokenText = word;
                 let translatedwords = this.isTagalog === true ? yield this.translateText(word, "tl") : word;
                 if (availableVoices.includes(this.voiceName)) {
                     responsiveVoice.speak(translatedwords, this.voiceName);
