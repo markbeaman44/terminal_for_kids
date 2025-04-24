@@ -113,6 +113,7 @@ export default class level extends Phaser.Scene {
                 this.inputText.text += event.key;
             }
         });
+        this.resizeGame(this.scale.gameSize);
         this.scale.on("resize", this.resizeGame, this);
     }
     checkCommand() {
@@ -167,8 +168,10 @@ export default class level extends Phaser.Scene {
     }
     resizeGame(gameSize) {
         let { width, height } = gameSize;
-        let scaleFactor = width < 800 ? 0.9 : 1;
-        this.imageGroup.setScale(scaleFactor);
+        let scaleFactorX = width < 600 ? 0.4 : width < 700 ? 0.5 : width < 800 ? 0.6 : width < 1000 ? 0.7 : width < 1200 ? 0.8 : 1;
+        this.imageGroup.setScale(scaleFactorX);
+        let scaleFactorY = height < 700 ? 0.8 : 1;
+        this.imageGroup.setScale(scaleFactorY);
         // Ensure camera covers full size
         this.cameras.resize(width, height);
         // Reposition Images within Group

@@ -5,7 +5,7 @@ export default class speechHandler {
         this.scene = scene;
     }
     private scene: Phaser.Scene;
-    private speechEnabled: boolean = true;
+    private speechEnabled: boolean = false;
     private isTagalog: boolean = false;
     private speechButton!: Phaser.GameObjects.Text;
     private languageButton!: Phaser.GameObjects.Text;
@@ -13,7 +13,7 @@ export default class speechHandler {
     private voiceName = "Filipino Female";
 
     public createSpeechButton(x: number, y: number): Phaser.GameObjects.Text {
-        return this.speechButton = this.scene.add.text(x, y, "🔊 Sound: ON", {
+        return this.speechButton = this.scene.add.text(x, y, "🔇 Sound: OFF", {
             fontSize: "24px",
             color: "#ffffff",
             backgroundColor: "#333",
@@ -47,10 +47,10 @@ export default class speechHandler {
     }
 
     public async playWordPrompt(word: string) {
+        this.lastSpokenText = word;
         // Use chosen voice if delay use default voice
         if (this.speechEnabled) {
             const availableVoices = responsiveVoice.getVoices().map(v => v.name);
-            this.lastSpokenText = word;
 
             let translatedwords = this.isTagalog === true ? await this.translateText(word, "tl") : word;
 
